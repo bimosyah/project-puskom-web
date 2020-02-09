@@ -32,8 +32,13 @@ class MSuhu extends CI_Model {
 
 	public function get_today()
 	{
-		$this->db->where('DATE(timestamp)',date("Y-m-d"));
-		$query = $this->db->get('suhu');
+		$query = $this->db->query('SELECT * FROM suhu WHERE DATE(timestamp) = CURDATE()');
+		return $query->result();	
+	}
+
+	public function get_yesterday()
+	{
+		$query = $this->db->query('SELECT * FROM suhu WHERE timestamp >= DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND timestamp < CURDATE()');
 		return $query->result();	
 	}
 

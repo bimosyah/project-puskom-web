@@ -19,6 +19,16 @@ class Chart extends CI_Controller {
 		echo json_encode($arr);
 	}
 
+	public function get_yesterday()
+	{
+		$arr = array();
+		$data = $this->suhu->get_yesterday();
+		foreach ($data as $value) {
+			array_push($arr, $value->suhu);
+		}
+		echo json_encode($arr);
+	}
+
 	public function get_by_date()
 	{
 		$date_search = $this->input->post('date_search');

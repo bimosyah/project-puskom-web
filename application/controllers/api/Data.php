@@ -55,16 +55,30 @@ class Data extends CI_Controller {
 			$i++;
 		}
 
-		echo json_encode($data);
+		$output = array(
+			"data"    => $data
+		);
+
+		echo json_encode($output);
+	}
+
+	public function dataTotal()
+	{
+		$get = $this->suhu->get();
+		$i = 0;
+		foreach ($get as $value) {
+			$i++;
+		}
+		return $i;
 	}
 
 	public function test()
 	{
-		for ($i = 0; $i < 24; $i++) {
+		for ($i = 0; $i <= 23; $i++) {
 			$object = array(
 				'suhu' => round($this->randomFloat(25, 35),1),
 				'keterangan' => "",
-				'timestamp' => "2020-02-06 ".$i.":00:00"
+				'timestamp' => "2020-02-09 ".$i.":00:00"
 			);	
 			// $query = $this->suhu->save($object);
 		}
