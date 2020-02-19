@@ -7,6 +7,7 @@ class Chart extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('mSuhu','suhu');
+		$this->load->helper('form');
 	}
 
 	public function get_today()
@@ -36,6 +37,7 @@ class Chart extends CI_Controller {
 		$get_data = $this->suhu->get_by_date($date_search);
 
 		$data = array();
+		$chart = array();
 		$i = 1;
 		foreach ($get_data as $value) {
 			$date = date_format(date_create($value->timestamp), 'd-m-Y');
@@ -48,6 +50,7 @@ class Chart extends CI_Controller {
 			);
 
 			array_push($data, $temp_arr);
+			array_push($chart, $value->suhu);
 
 			$i++;
 		}
@@ -56,7 +59,8 @@ class Chart extends CI_Controller {
 			"draw"    => intval($this->input->post('draw')),
 			"recordsTotal"  =>  $this->dataTotal(),
 			"recordsFiltered" => $i-1,
-			"data"    => $data
+			"table"    => $data,
+			"chart" => $chart
 		);
 
 		echo json_encode($output);	
