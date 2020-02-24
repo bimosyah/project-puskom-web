@@ -78,7 +78,7 @@ class Data extends CI_Controller {
 			$object = array(
 				'suhu' => round($this->randomFloat(25, 35),1),
 				'keterangan' => "",
-				'timestamp' => "2020-02-20 ".$i.":00:00"
+				'timestamp' => "2020-02-21 ".$i.":00:00"
 			);	
 			// $query = $this->suhu->save($object);
 		}
