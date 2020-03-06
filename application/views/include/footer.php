@@ -25,9 +25,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 <script>
   var table = "";
-  var base_cname = "<?php echo base_url() ?>";
   var data_today = [];
+  var label = [];
   var data_yesterday = [];
+
   var isToday = true;
 
   var mode      = 'index'
@@ -49,19 +50,15 @@
           // display: false,
           gridLines: {
             display      : true,
-            lineWidth    : '4px',
-            color        : 'rgba(0, 0, 0, .2)',
-            zeroLineColor: 'transparent'
           },
           ticks    : $.extend({
-            beginAtZero : true,
-            suggestedMax: 50
+            
+            stepSize: 1.0
           }, ticksStyle)
         }],
         xAxes: [{
-          display  : true,
           gridLines: {
-            display: false
+            display: true
           },
           ticks    : ticksStyle
         }]
@@ -75,25 +72,18 @@
     })
   }
 
-  function loadChart(data_today){
+  function loadChart(data_today,label){
+    // chart.destroy();
     chart  = new Chart(canvas, {
       data   : {
-        labels  : ['00.00', '01.00', '02.00', '03.00', '04.00', '05.00', '06.00',
-        '07.00','08.00','09.00','10.00','11.00','12.00','13.00',
-        '14.00','15.00','16.00','17.00','18.00','19.00','20.00',
-        '21.00', '22.00', '23.00'
-        ],
+        labels  : label,
         datasets: [
         {
           type                : 'line',
           data                : data_today,
-          backgroundColor     : 'tansparent',
-          borderColor         : '#ced4da',
-          pointBorderColor    : '#ced4da',
-          pointBackgroundColor: '#ced4da',
+          backgroundColor     : '#FF6384',
+          borderColor         : '#FF6384',
           fill                : false
-          // pointHoverBackgroundColor: '#ced4da',
-          // pointHoverBorderColor    : '#ced4da'
         }]
       },
       options: {
@@ -114,19 +104,14 @@
           // display: false,
           gridLines: {
             display      : true,
-            lineWidth    : '4px',
-            color        : 'rgba(0, 0, 0, .2)',
-            zeroLineColor: 'transparent'
           },
           ticks    : $.extend({
-            beginAtZero : true,
-            suggestedMax: 50
+            stepSize: 1.00
           }, ticksStyle)
         }],
         xAxes: [{
-          display  : true,
           gridLines: {
-            display: false
+            display: true
           },
           ticks    : ticksStyle
         }]
@@ -138,24 +123,40 @@
   }
 
   function loadChartToday() {
-    chart.destroy();
-    $.getJSON('<?php echo base_url('api/chart/get_today') ?>', function(data) {
-      $.each(data, function(index) {
-        data_today.push(data[index])
-      });
+    // chart.destroy();
+    // $.getJSON('<?php echo base_url('api/chart/get_today') ?>', function(data) {
+    //   $.each(data, function(index) {
+    //     data_today.push(data[index])
+    //   });
+    // });
+    $.ajax({
+        url: '<?php echo base_url('api/chart/get_today') ?>',
+        type: "GET",
+        dataType: 'JSON',
+        success: function (data) {
+            for (var x = 0; x < data.length; x++) {
+                // content = data[x].Id;
+                data_today.push(data[x].suhu)
+                label.push(data[x].label);
+               // updateListing(data[x]);
+            }
+            loadChart(data_today,label);
+        }
     });
-    loadChart(data_today);
   }
 
   function today(){
+    data_today = [];
+    label = [];
     isToday = true;
     loadChartToday();
     var table = $("#example1").DataTable({
       dom: 'Bfrtip',
       buttons: ['excel', 'pdf', 'print'],
       "destroy" : true,
+      "processing": true,
       "ajax":{
-        "url": '<?php echo base_url('api/data/getData') ?>',
+        "url": '<?php echo base_url('api/chart/getData') ?>',
       },
 
       "columns": [
@@ -168,9 +169,12 @@
 
     if (isToday) {
       setInterval( function () {
+        data_today = [];
+        label = [];
+        chart.destroy();
         table.ajax.reload();
         loadChartToday();
-      }, 30000 );
+      }, 1000 * 60 * 60 );
     }
   }
 
@@ -188,10 +192,11 @@
         var json = $.parseJSON(response);
         date_today = [];
         chart.destroy();
-        loadChart(json.chart);
+        loadChart(json.chart,json.label);
 
         var table = $("#example1").DataTable({
           "destroy" : true,
+          "processing": true,
           dom: 'Bfrtip',
           buttons: ['excel', 'pdf', 'print'],
           "data": json.table,

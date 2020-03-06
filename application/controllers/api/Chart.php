@@ -10,12 +10,44 @@ class Chart extends CI_Controller {
 		$this->load->helper('form');
 	}
 
+	public function getData()
+	{
+		$all_data = $this->suhu->get_today();
+
+		$data = array();
+		$i = 1;
+		foreach ($all_data as $value) {
+			$date = date_format(date_create($value->timestamp), 'd-m-Y');
+			$time = date_format(date_create($value->timestamp), 'H:i:s');
+			$temp_arr = array(
+				'no' => $i,
+				'date' => $date,
+				'time' => $time,
+				'suhu' => $value->suhu
+			);
+
+			array_push($data, $temp_arr);
+
+			$i++;
+		}
+
+		$output = array(
+			"data"    => $data
+		);
+
+		echo json_encode($output);
+	}
+	
 	public function get_today()
 	{
 		$arr = array();
 		$data = $this->suhu->get_today();
 		foreach ($data as $value) {
-			array_push($arr, $value->suhu);
+			$temp_arr = array(
+				'suhu' => $value->suhu,
+				'label' => date('H:00', strtotime($value->timestamp)),
+			);
+			array_push($arr, $temp_arr);
 		}
 		echo json_encode($arr);
 	}
@@ -37,6 +69,7 @@ class Chart extends CI_Controller {
 		$get_data = $this->suhu->get_by_date($date_search);
 
 		$data = array();
+		$label = array();
 		$chart = array();
 		$i = 1;
 		foreach ($get_data as $value) {
@@ -49,6 +82,7 @@ class Chart extends CI_Controller {
 				'suhu' => $value->suhu
 			);
 
+			array_push($label, date('H:00', strtotime($value->timestamp)));
 			array_push($data, $temp_arr);
 			array_push($chart, $value->suhu);
 
@@ -60,7 +94,8 @@ class Chart extends CI_Controller {
 			"recordsTotal"  =>  $this->dataTotal(),
 			"recordsFiltered" => $i-1,
 			"table"    => $data,
-			"chart" => $chart
+			"chart" => $chart,
+			"label" => $label
 		);
 
 		echo json_encode($output);	

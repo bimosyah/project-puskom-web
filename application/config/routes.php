@@ -52,4 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-// $route['get_by_date/(:any)'] = 'api/chart/get_by_date/$1';
+$route['sms/update'] = 'home/sms_update';
+$route['sms'] = 'home/sms';
+$route['batas-suhu'] = 'home/batas_suhu';
+$route['update-batas-suhu'] = 'home/batas_suhu_update';

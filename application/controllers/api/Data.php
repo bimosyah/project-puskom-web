@@ -6,7 +6,18 @@ class Data extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('mSms','sms');
 		$this->load->model('mSuhu','suhu');
+	}
+
+	public function nomer_hp()
+	{
+		$query = $this->sms->get();
+		$nomer_hp = "";
+		foreach ($query as $value) {
+			$nomer_hp = $value->nomer_hp;
+		}
+		echo json_encode("+{$nomer_hp}");
 	}
 
 	public function post()
@@ -31,45 +42,6 @@ class Data extends CI_Controller {
 		}else {
 			echo json_encode(array('status' => 'empty'));
 		}
-	}
-
-
-	public function getData()
-	{
-		$all_data = $this->suhu->get_today();
-
-		$data = array();
-		$i = 1;
-		foreach ($all_data as $value) {
-			$date = date_format(date_create($value->timestamp), 'd-m-Y');
-			$time = date_format(date_create($value->timestamp), 'H:i:s');
-			$temp_arr = array(
-				'no' => $i,
-				'date' => $date,
-				'time' => $time,
-				'suhu' => $value->suhu
-			);
-
-			array_push($data, $temp_arr);
-
-			$i++;
-		}
-
-		$output = array(
-			"data"    => $data
-		);
-
-		echo json_encode($output);
-	}
-
-	public function dataTotal()
-	{
-		$get = $this->suhu->get();
-		$i = 0;
-		foreach ($get as $value) {
-			$i++;
-		}
-		return $i;
 	}
 
 	public function test()
