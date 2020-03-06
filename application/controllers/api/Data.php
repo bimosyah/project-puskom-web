@@ -8,6 +8,7 @@ class Data extends CI_Controller {
 		parent::__construct();
 		$this->load->model('mSms','sms');
 		$this->load->model('mSuhu','suhu');
+		$this->load->model('mBatasSuhu','batas_suhu');
 	}
 
 	public function nomer_hp()
@@ -43,6 +44,20 @@ class Data extends CI_Controller {
 			echo json_encode(array('status' => 'empty'));
 		}
 	}
+
+	public function batas_suhu()
+	{
+		$query = $this->batas_suhu->get();
+		$suhu_bawah = "";
+		$suhu_atas = "";
+
+		foreach ($query as $value) {
+			$suhu_bawah = $value->suhu_bawah;
+			$suhu_atas = $value->suhu_atas;
+		}
+		echo json_encode(array('suhu_bawah' => $suhu_bawah,'suhu_atas' => $suhu_atas));
+	}
+
 
 	public function test()
 	{

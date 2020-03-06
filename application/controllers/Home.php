@@ -57,18 +57,25 @@ class Home extends CI_Controller {
 		$suhu_atas = $this->input->post('suhu_atas');
 		$query = null;
 
-		if ($suhu_bawah == "") {
+		if ($suhu_bawah == "" && $suhu_atas != "") {
 			$query = $this->batas_suhu->update(array('suhu_atas' => $suhu_atas));	
 		}
 
-		if ($suhu_atas == "") {
+		if ($suhu_atas == "" && $suhu_bawah != "") {
 			$query = $this->batas_suhu->update(array('suhu_bawah' => $suhu_bawah));	
 		}
 
 		if ($suhu_bawah != "" && $suhu_atas != "") {
-			$query = $this->batas_suhu->update(array('suhu_bawah' => $suhu_bawah,'suhu_atas' => $suhu_atas));	
+			if ($suhu_bawah > $suhu_atas) {
+				redirect('home/batas_suhu','refresh');
+			}else {
+				$query = $this->batas_suhu->update(array('suhu_bawah' => $suhu_bawah,'suhu_atas' => $suhu_atas));		
+			}			
 		}
 
+		if ($suhu_bawah == "" && $suhu_atas == "") {
+			redirect('home/batas_suhu','refresh');
+		}
 		
 		if ($query) {
 			redirect('home/batas_suhu','refresh');
