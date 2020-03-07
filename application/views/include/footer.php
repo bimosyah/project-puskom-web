@@ -146,6 +146,7 @@
   }
 
   function today(){
+    $("input[name='datepicker']").val("");
     data_today = [];
     label = [];
     isToday = true;

@@ -91,7 +91,7 @@
             <div class="col-lg-6">
               <div class="card">
                 <div class="card-header border-0">
-                  <h3 class="card-title">Tabel Suhu Hari Ini</h3>
+                  <h3 class="card-title">Tabel Suhu</h3>
                   <div class="card-tools">                    
                   </div>
                 </div>
