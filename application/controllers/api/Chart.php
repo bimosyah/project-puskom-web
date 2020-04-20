@@ -110,6 +110,46 @@ class Chart extends CI_Controller {
 		}
 		return $i;
 	}
+
+	public function laporan()
+	{
+		$date_awal = $this->input->post('date_awal');
+		$date_akhir = $this->input->post('date_akhir');
+		// $date_search = "2020-02-06";
+		$get_data = $this->suhu->get_by_date_laporan($date_awal,$date_akhir);
+
+		$data = array();
+		$label = array();
+		$chart = array();
+		$i = 1;
+		foreach ($get_data as $value) {
+			$date = date_format(date_create($value->timestamp), 'd-m-Y');
+			$time = date_format(date_create($value->timestamp), 'H:i:s');
+			$temp_arr = array(
+				'no' => $i,
+				'date' => $date,
+				'time' => $time,
+				'suhu' => $value->suhu
+			);
+
+			array_push($label, date('H:00', strtotime($value->timestamp)));
+			array_push($data, $temp_arr);
+			array_push($chart, $value->suhu);
+
+			$i++;
+		}
+
+		$output = array(
+			"draw"    => intval($this->input->post('draw')),
+			"recordsTotal"  =>  $this->dataTotal(),
+			"recordsFiltered" => $i-1,
+			"table"    => $data,
+			"chart" => $chart,
+			"label" => $label
+		);
+
+		echo json_encode($output);	
+	}
 }
 
 /* End of file Chart.php */

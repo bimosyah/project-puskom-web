@@ -49,6 +49,14 @@ class MSuhu extends CI_Model {
 		return $query->result();	
 	}
 
+	public function get_by_date_laporan($date_awal,$date_akhir)
+	{
+		$this->db->where('DATE(timestamp) >=', $date_awal);
+		$this->db->where('DATE(timestamp) <=', $date_akhir);
+		$query = $this->db->get('suhu');
+		return $query->result();	
+	}
+
 
 
 }

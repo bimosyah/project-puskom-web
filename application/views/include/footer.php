@@ -52,7 +52,7 @@
             display      : true,
           },
           ticks    : $.extend({
-            
+
             stepSize: 1.0
           }, ticksStyle)
         }],
@@ -67,6 +67,14 @@
 
   function datepick(){
     $('#datepicker').datepicker({
+      autoclose: true,
+      format: 'yyyy-mm-dd',
+    })
+    $('#datepicker_awal').datepicker({
+      autoclose: true,
+      format: 'yyyy-mm-dd',
+    })
+    $('#datepicker_akhir').datepicker({
       autoclose: true,
       format: 'yyyy-mm-dd',
     })
@@ -130,19 +138,19 @@
     //   });
     // });
     $.ajax({
-        url: '<?php echo base_url('api/chart/get_today') ?>',
-        type: "GET",
-        dataType: 'JSON',
-        success: function (data) {
-            for (var x = 0; x < data.length; x++) {
+      url: '<?php echo base_url('api/chart/get_today') ?>',
+      type: "GET",
+      dataType: 'JSON',
+      success: function (data) {
+        for (var x = 0; x < data.length; x++) {
                 // content = data[x].Id;
                 data_today.push(data[x].suhu)
                 label.push(data[x].label);
                // updateListing(data[x]);
-            }
-            loadChart(data_today,label);
-        }
-    });
+             }
+             loadChart(data_today,label);
+           }
+         });
   }
 
   function today(){
@@ -175,7 +183,7 @@
         chart.destroy();
         table.ajax.reload();
         loadChartToday();
-      }, 1000 * 60 * 60 );
+      }, 600000);
     }
   }
 
@@ -212,6 +220,39 @@
       }
     });
     }
+  }
+
+  function laporan(){
+    var date_awal = $("input[name='datepicker_awal']").val();
+    var date_akhir = $("input[name='datepicker_akhir']").val();
+
+    if (date_awal == "" || date_akhir == "") {
+
+    }else {
+      $.ajax({
+       type: "POST",
+       url: '<?php echo base_url('api/chart/laporan') ?>',
+       data: {date_awal:date_awal, date_akhir:date_akhir},
+       success: function(response){
+        var json = $.parseJSON(response);
+        var table = $("#example1").DataTable({
+          "destroy" : true,
+          "processing": true,
+          dom: 'Bfrtip',
+          buttons: ['excel', 'pdf', 'print'],
+          "data": json.table,
+          "dataSrc": "table",
+          "columns": [
+          { data: 'no'},
+          { data: 'date' },
+          { data: 'time' },
+          { data: 'suhu' }
+          ]
+        });
+      }
+    });  
+    }
+    
   }
 
 </script> 

@@ -26,6 +26,14 @@
                 </p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url("laporan") ?>" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Laporan
+                </p>
+              </a>
+            </li>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->

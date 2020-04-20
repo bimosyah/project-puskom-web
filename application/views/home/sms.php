@@ -43,7 +43,6 @@
                 </div>
                 <div class="card-body">
                   <h3>Nomor hp saat ini : <?php echo $nomer_hp ?></h3>
-                  <h6>Dibuat pada : <?php echo $dibuat ?></h6>
                   <h6>Diperbarui pada : <?php echo $diganti ?></h6>
                   <br>
                   <div class="row">

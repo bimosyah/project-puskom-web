@@ -6,9 +6,9 @@ class Home extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('mSuhu','suhu');
-		$this->load->model('mSms','sms');
-		$this->load->model('mBatasSuhu','batas_suhu');
+		$this->load->model('msuhu','suhu');
+		$this->load->model('msms','sms');
+		$this->load->model('mbatassuhu','batas_suhu');
 	}
 
 	public function index()
@@ -80,11 +80,6 @@ class Home extends CI_Controller {
 		if ($query) {
 			redirect('home/batas_suhu','refresh');
 		}	
-	}
-
-	public function laporan()
-	{
-		$this->load->view('home/laporan');
 	}
 
 }
